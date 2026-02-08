@@ -187,7 +187,7 @@ def create_line_chart(excel_file, output_dir='graphs'):
         plt.savefig(output_file, dpi=DPI, bbox_inches='tight')
         plt.close(fig)
         
-        print(f'✓ Grafik erstellt: {output_file}')
+        print(f'Grafik erstellt: {output_file}')
         
     except Exception as e:
         print(f'✗ Fehler bei {excel_file}: {str(e)}')

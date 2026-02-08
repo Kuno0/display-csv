@@ -121,24 +121,39 @@ def create_line_chart(excel_file, output_dir='graphs'):
         lines = []    # Zur Sammlung aller Linien für die Legende
         
         # Für jede numerische Spalte eine Linie zeichnen
+        # Layout: 2 Achsen links, 2 rechts (idx 0,2 = links; idx 1,3 = rechts)
         for idx, (col_name, col_data) in enumerate(numeric_data.items()):
             color = COLORS[idx % len(COLORS)]
             
             if idx == 0:
-                # Erste Datenreihe auf der linken Achse
+                # Erste Datenreihe auf der linken Achse (Hauptachse)
                 ax = ax1
                 ax.set_xlabel('Zeit', fontsize=12)
                 ax.set_ylabel(col_name, fontsize=11, color=color)
                 ax.tick_params(axis='y', labelcolor=color)
-            else:
-                # Zusätzliche Achsen rechts hinzufügen
+            elif idx == 1:
+                # Erste rechte Achse
                 ax = ax1.twinx()
-                
-                # Achse nach rechts verschieben (offset)
+                ax.set_ylabel(col_name, fontsize=11, color=color)
+                ax.tick_params(axis='y', labelcolor=color)
+                axes.append(ax)
+            elif idx == 2:
+                # Zweite linke Achse
+                ax = ax1.twinx()
+                # Verstecke die rechte Spine, zeige die linke Spine
+                ax.spines['right'].set_visible(False)
+                ax.spines['left'].set_position(('outward', 60))
+                ax.yaxis.set_label_position('left')
+                ax.yaxis.tick_left()
+                ax.set_ylabel(col_name, fontsize=11, color=color)
+                ax.tick_params(axis='y', labelcolor=color)
+                axes.append(ax)
+            else:  # idx >= 3
+                # Weitere rechte Achsen
+                ax = ax1.twinx()
                 ax.spines['right'].set_position(('outward', 60 * (idx - 1)))
                 ax.set_ylabel(col_name, fontsize=11, color=color)
                 ax.tick_params(axis='y', labelcolor=color)
-                
                 axes.append(ax)
             
             # Linie zeichnen
